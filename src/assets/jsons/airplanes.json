@@ -1,0 +1,209 @@
+{
+    "pattern": "GP3",
+    "nodes": [{
+        "id": "3",
+        "label": "FLIGHT",
+        "properties": {
+            "number": "None",
+            "date": "None"
+        }
+    }, {
+        "id": "5",
+        "label": "AIRPORT",
+        "properties": {
+            "name": "None"
+        }
+    }, {
+        "id": "8",
+        "label": "STATUS",
+        "properties": {
+            "date": "None",
+            "hour": "None",
+            "status": "None"
+        }
+    }, {
+        "id": "10",
+        "label": "AIRLINE",
+        "properties": {
+            "name": "None"
+        }
+    }, {
+        "id": "4",
+        "label": "AIRPLANE",
+        "properties": {
+            "license_number": "None"
+        }
+    }, {
+        "id": "7",
+        "label": "BAGGAGE_BELT",
+        "properties": {
+            "belt_number": "None"
+        }
+    }, {
+        "id": "9",
+        "label": "OPERATES",
+        "properties": {}
+    }, {
+        "id": "12",
+        "label": "CREW_MEMBER_PILOT",
+        "properties": {
+            "license": "None",
+            "flight_hours": "None"
+        }
+    }, {
+        "id": "13",
+        "label": "CREW_MEMBER_COPILOT",
+        "properties": {
+            "license": "None",
+            "flight_hours": "None"
+        }
+    }, {
+        "id": "14",
+        "label": "CREW_MEMBER_CABIN_CREW",
+        "properties": {
+            "role": "None"
+        }
+    }, {
+        "id": "6",
+        "label": "LOCATION",
+        "properties": {
+            "city": "None",
+            "country": "None"
+        }
+    }, {
+        "id": "1",
+        "label": "CUSTOMER",
+        "properties": {
+            "passport": "None",
+            "name": "None",
+            "surname": "None"
+        }
+    }, {
+        "id": "2",
+        "label": "SEAT",
+        "properties": {
+            "seat_number": "None"
+        }
+    }],
+    "edges": [{
+        "id": "3_2",
+        "source": "3",
+        "target": "2",
+        "value": "1..1",
+        "restriction": ""
+    }, {
+        "id": "3_4",
+        "source": "3",
+        "target": "4",
+        "value": "0..*",
+        "restriction": ""
+    }, {
+        "id": "3_7",
+        "source": "3",
+        "target": "7",
+        "value": "0..*",
+        "restriction": "Only one baggage per flight at the destination airport"
+    }, {
+        "id": "3_9",
+        "source": "3",
+        "target": "9",
+        "value": "1..*",
+        "restriction": ""
+    }, {
+        "id": "3_5",
+        "source": "3",
+        "target": "5",
+        "value": "1..*",
+        "restriction": ""
+    }, {
+        "id": "3_12",
+        "source": "3",
+        "target": "12",
+        "value": "1..*",
+        "restriction": ""
+    }, {
+        "id": "3_13",
+        "source": "3",
+        "target": "13",
+        "value": "1..*",
+        "restriction": ""
+    }, {
+        "id": "3_14",
+        "source": "3",
+        "target": "14",
+        "value": "1..*",
+        "restriction": ""
+    }, {
+        "id": "5_6",
+        "source": "5",
+        "target": "6",
+        "value": "1..*",
+        "restriction": ""
+    }, {
+        "id": "5_7",
+        "source": "5",
+        "target": "7",
+        "value": ":Has",
+        "restriction": ""
+    }, {
+        "id": "8_9",
+        "source": "8",
+        "target": "9",
+        "value": "1..*",
+        "restriction": ""
+    }, {
+        "id": "10_9",
+        "source": "10",
+        "target": "9",
+        "value": "1..1",
+        "restriction": ""
+    }, {
+        "id": "10_11",
+        "source": "10",
+        "target": "11",
+        "value": "1..1",
+        "restriction": ""
+    }, {
+        "id": "12_11",
+        "source": "12",
+        "target": "11",
+        "value": "{Complete, Disjoint}",
+        "restriction": ""
+    }, {
+        "id": "13_11",
+        "source": "13",
+        "target": "11",
+        "value": "{Complete, Disjoint}",
+        "restriction": ""
+    }, {
+        "id": "14_11",
+        "source": "14",
+        "target": "11",
+        "value": "{Complete, Disjoint}",
+        "restriction": ""
+    }, {
+        "id": "1_2",
+        "source": "1",
+        "target": "2",
+        "value": "1..1",
+        "restriction": ""
+    }, {
+        "id": "12_10",
+        "source": "12",
+        "target": "10",
+        "value": "{Complete, Disjoint}",
+        "restriction": ""
+    }, {
+        "id": "13_10",
+        "source": "13",
+        "target": "10",
+        "value": "{Complete, Disjoint}",
+        "restriction": ""
+    }, {
+        "id": "14_10",
+        "source": "14",
+        "target": "10",
+        "value": "{Complete, Disjoint}",
+        "restriction": ""
+    }]
+}
