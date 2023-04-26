@@ -1,24 +1,8 @@
 [{
   "pattern": "A",
   "nodes": [{
-    "id": "18",
-    "label": "REGION",
-    "properties": {}
-  }, {
-    "id": "2",
-    "label": "NATION",
-    "properties": {}
-  }, {
     "id": "38",
     "label": "PARTSUPP",
-    "properties": {}
-  }, {
-    "id": "31",
-    "label": "TIME",
-    "properties": {}
-  }, {
-    "id": "17",
-    "label": "CUSTOMER",
     "properties": {}
   }, {
     "id": "23",
@@ -28,95 +12,96 @@
     "id": "25",
     "label": "PART",
     "properties": {}
+  }, {
+    "id": "27",
+    "label": "LINEITEM",
+    "properties": {}
+  }, {
+    "id": "13",
+    "label": "ORDER",
+    "properties": {}
+  }, {
+    "id": "2",
+    "label": "NATION",
+    "properties": {}
+  }, {
+    "id": "17",
+    "label": "CUSTOMER",
+    "properties": {}
   }],
   "edges": [{
-    "id": "18_2",
-    "source": "18",
-    "target": "2",
+    "id": "38_23",
+    "source": "38",
+    "target": "23",
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "to"
+  }, {
+    "id": "38_25",
+    "source": "38",
+    "target": "25",
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "to"
+  }, {
+    "id": "38_27",
+    "source": "38",
+    "target": "27",
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "from"
+  }, {
+    "id": "27_13",
+    "source": "27",
+    "target": "13",
+    "label": ":IN",
+    "restriction": "",
+    "arrow": "to"
+  }, {
+    "id": "27_31",
+    "source": "27",
+    "target": "31",
     "label": "",
     "restriction": ""
   }, {
     "id": "2_23",
     "source": "2",
     "target": "23",
-    "label": "",
-    "restriction": ""
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "from"
   }, {
     "id": "2_17",
     "source": "2",
     "target": "17",
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "from"
+  }, {
+    "id": "2_18",
+    "source": "2",
+    "target": "18",
     "label": "",
     "restriction": ""
   }, {
-    "id": "38_23",
-    "source": "38",
-    "target": "23",
-    "label": "",
-    "restriction": ""
+    "id": "13_17",
+    "source": "13",
+    "target": "17",
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "to"
   }, {
-    "id": "38_25",
-    "source": "38",
-    "target": "25",
-    "label": "",
-    "restriction": ""
-  }, {
-    "id": "38_27",
-    "source": "38",
-    "target": "27",
-    "label": "",
-    "restriction": ""
-  }, {
-    "id": "31_27",
-    "source": "31",
-    "target": "27",
-    "label": "",
-    "restriction": ""
-  }, {
-    "id": "31_13",
-    "source": "31",
-    "target": "13",
-    "label": "",
-    "restriction": ""
-  }, {
-    "id": "17_13",
-    "source": "17",
-    "target": "13",
-    "label": "",
-    "restriction": ""
-  }, {
-    "id": "17_40",
-    "source": "17",
-    "target": "40",
-    "label": "",
-    "restriction": ""
-  }, {
-    "id": "17_39",
-    "source": "17",
-    "target": "39",
+    "id": "13_31",
+    "source": "13",
+    "target": "31",
     "label": "",
     "restriction": ""
   }]
 }, {
   "pattern": "B",
   "nodes": [{
-    "id": "18",
-    "label": "REGION",
-    "properties": {}
-  }, {
-    "id": "2",
-    "label": "NATION",
-    "properties": {}
-  }, {
     "id": "38",
     "label": "PARTSUPP",
-    "properties": {}
-  }, {
-    "id": "31",
-    "label": "TIME",
-    "properties": {}
-  }, {
-    "id": "17",
-    "label": "CUSTOMER",
     "properties": {}
   }, {
     "id": "23",
@@ -127,8 +112,24 @@
     "label": "PART",
     "properties": {}
   }, {
+    "id": "27",
+    "label": "LINEITEM",
+    "properties": {}
+  }, {
+    "id": "13",
+    "label": "ORDER",
+    "properties": {}
+  }, {
+    "id": "2",
+    "label": "NATION",
+    "properties": {}
+  }, {
     "id": "39",
     "label": "COMPANY",
+    "properties": {}
+  }, {
+    "id": "17",
+    "label": "CUSTOMER",
     "properties": {}
   }, {
     "id": "40",
@@ -136,70 +137,85 @@
     "properties": {}
   }],
   "edges": [{
-    "id": "18_2",
-    "source": "18",
-    "target": "2",
+    "id": "38_23",
+    "source": "38",
+    "target": "23",
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "to"
+  }, {
+    "id": "38_25",
+    "source": "38",
+    "target": "25",
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "to"
+  }, {
+    "id": "38_27",
+    "source": "38",
+    "target": "27",
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "from"
+  }, {
+    "id": "27_13",
+    "source": "27",
+    "target": "13",
+    "label": ":IN",
+    "restriction": "",
+    "arrow": "to"
+  }, {
+    "id": "27_31",
+    "source": "27",
+    "target": "31",
     "label": "",
     "restriction": ""
   }, {
     "id": "2_23",
     "source": "2",
     "target": "23",
-    "label": "",
-    "restriction": ""
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "from"
   }, {
     "id": "2_17",
     "source": "2",
     "target": "17",
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "from"
+  }, {
+    "id": "2_18",
+    "source": "2",
+    "target": "18",
     "label": "",
     "restriction": ""
   }, {
-    "id": "38_23",
-    "source": "38",
-    "target": "23",
+    "id": "13_17",
+    "source": "13",
+    "target": "17",
+    "label": ":HAS",
+    "restriction": "",
+    "arrow": "to"
+  }, {
+    "id": "13_31",
+    "source": "13",
+    "target": "31",
     "label": "",
     "restriction": ""
   }, {
-    "id": "38_25",
-    "source": "38",
-    "target": "25",
-    "label": "",
-    "restriction": ""
+    "id": "39_17",
+    "source": "39",
+    "target": "17",
+    "label": ":IS_A",
+    "restriction": "",
+    "arrow": "to"
   }, {
-    "id": "38_27",
-    "source": "38",
-    "target": "27",
-    "label": "",
-    "restriction": ""
-  }, {
-    "id": "31_27",
-    "source": "31",
-    "target": "27",
-    "label": "",
-    "restriction": ""
-  }, {
-    "id": "31_13",
-    "source": "31",
-    "target": "13",
-    "label": "",
-    "restriction": ""
-  }, {
-    "id": "17_13",
-    "source": "17",
-    "target": "13",
-    "label": "",
-    "restriction": ""
-  }, {
-    "id": "17_40",
-    "source": "17",
-    "target": "40",
-    "label": "",
-    "restriction": ""
-  }, {
-    "id": "17_39",
-    "source": "17",
-    "target": "39",
-    "label": "",
-    "restriction": ""
+    "id": "40_17",
+    "source": "40",
+    "target": "17",
+    "label": ":IS_A",
+    "restriction": "",
+    "arrow": "to"
   }]
 }]

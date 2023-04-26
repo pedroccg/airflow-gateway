@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { interval, Subject, switchMap, takeUntil } from 'rxjs';
 import { VisNetworkService, Data, DataSet, Node, Options, Edge } from 'ngx-vis';
+import { ViewChild } from '@angular/core';
 //import * as d3 from 'd3'
+
+
 
 @Component({
   selector: 'app-root',
@@ -36,26 +39,56 @@ export class AppComponent implements OnInit {
 
   
 
-  public networkInitialized(): void {
-    
-  }
+ 
 
   constructor(private http: HttpClient, private visNetworkService: VisNetworkService) {
 
-    this.visNetworkOptions = {
-      interaction:{
-        zoomView: true,
-      },
-      physics: true,
+    // this.visNetworkOptions = {
+    //   interaction:{
+    //     zoomView: true,
+    //   },
+    //   physics: true,
+    //   layout: {
+    //     randomSeed: undefined,
+    //     improvedLayout:true,
+    //     clusterThreshold: 150,
+    //     hierarchical: {
+    //       enabled:false,
+    //       levelSeparation: 150,
+    //       nodeSpacing: 100,
+    //       treeSpacing: 200,
+    //       blockShifting: true,
+    //       edgeMinimization: true,
+    //       parentCentralization: true,
+    //       direction: 'UD',        // UD, DU, LR, RL
+    //       sortMethod: 'hubsize',  // hubsize, directed
+    //       shakeTowards: 'leaves'  // roots, leaves
+    //     }
+    //   }
       
-    }
+    // }
  
   }
 
-  ngOnInit() {
+  public networkInitialized(visNetwork: any): void {
 
   
+    console.log('Seed:', this.visNetworkService);
+    
 
+    this.visNetworkService.on(visNetwork.id, 'click');
+
+  // open your console/dev tools to see the click params
+  this.visNetworkService.click.subscribe((eventData: any[]) => {
+    if (eventData[0] === visNetwork.id) {
+      console.log(eventData);
+    }
+  });
+}
+
+  ngOnInit() {
+    // just for testing
+    this.loadJsonData();
   }
 
   loadJsonData() {
@@ -65,17 +98,42 @@ export class AppComponent implements OnInit {
         const nodes = visData.nodes;
         const edges = visData.edges;
         const name = jsonData.pattern;
+
+        
   
         this.visNetworks.push({
           name: name,
           id: `visNetwork_${index + 1}`,
           data: { nodes: nodes, edges: edges },
           options: {
-            // ... your options for the instance
-          },
+            interaction:{
+              zoomView: true,
+            },
+            physics: true,
+            layout: {
+              randomSeed: 1,
+              improvedLayout: true,
+              hierarchical: {
+                  enabled: false,
+                  levelSeparation: 150,
+                  nodeSpacing: 110,
+                  treeSpacing: 200,
+                  blockShifting: false,
+                  edgeMinimization: true,
+                  parentCentralization: true,
+                  direction: "LR",
+                  sortMethod: "directed",
+                  shakeTowards: "roots"
+              }
+          }
+          }
         });
       });
       this.readyToShow = true;
+      // testing only
+      this.dagRunId = 'asdasd'
+      //this.loadingData = true;
+
     });
   }
 
@@ -112,7 +170,7 @@ export class AppComponent implements OnInit {
       from: edge.source,
       to: edge.target,
       label: edge.label,
-      arrows: "to"
+      arrows: edge.arrow
     }));
 
     return {
@@ -180,7 +238,7 @@ export class AppComponent implements OnInit {
         next: (res: any) => {
           if (res.state === 'success') {
             // when dag is over
-            this.loadJsonData();
+            //this.loadJsonData();
             stopChecking$.next(); // Stop checking when the job is finished
           }
           else if (res.state === 'failed') { 

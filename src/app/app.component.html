@@ -393,7 +393,7 @@
             <mat-card style="flex: 1 1 50%; margin-right: 15px;">
               <h2>{{visNetwork.name}}</h2>
               <div class="network-canvas" [visNetwork]="visNetwork.id" [visNetworkData]="visNetwork.data"
-                [visNetworkOptions]="visNetwork.options" (initialized)="networkInitialized()"></div>
+                [visNetworkOptions]="visNetwork.options" (initialized)="networkInitialized(visNetwork)"></div>
             </mat-card>
           </ng-container>
         </div>
