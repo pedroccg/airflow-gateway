@@ -18,15 +18,26 @@ export class AppComponent implements OnInit {
 
   public visNetworkOptions!: Options
 
+  messages = [
+    'Fetching data...',
+    'Processing results...',
+    'Almost there...',
+    'Loading, please wait...',
+  ];
+
+  currentMessage = '';
+
+
   blocks = [
-    { title: 'Semantic Processing', completed: false, progress: 0, error: false, failed: false },
-    { title: 'Patterns Processing', completed: false, progress: 0, error: false , failed: false },
-    { title: 'Graph Processing', completed: false, progress: 0, error: false , failed: false },
-    { title: 'Assessment Processing', completed: false, progress: 0, error: false , failed: false }
+    { title: 'Semantic Processing', letter: 'C', completed: false, progress: 0, error: false, failed: false },
+    { title: 'Patterns Processing', letter: 'D', completed: false, progress: 0, error: false , failed: false },
+    { title: 'Graph Processing', letter: 'E', completed: false, progress: 0, error: false , failed: false },
+    { title: 'Assessment Processing', letter: 'F', completed: false, progress: 0, error: false , failed: false }
   ];
   
   
-  
+  timeoutRef: any;
+
 
   fileContent: string | ArrayBuffer | null = null;
 
@@ -36,7 +47,7 @@ export class AppComponent implements OnInit {
   subscription: any;
   fileInputLabel: any
   jsonString = ''
-
+  jobStarted: boolean = false;
   jsonData: any;
   visData_1: any;
   visData_2: any;
@@ -44,7 +55,9 @@ export class AppComponent implements OnInit {
   readyToShow: boolean = false;
   visNetworks: any[] = [];
   loadingData: boolean = false;
+  requestError: any = '';
 
+  airflowUrl = 'http://172.16.131.117:8080';
 
   
 
@@ -142,9 +155,9 @@ export class AppComponent implements OnInit {
           }
         });
       });
-      this.readyToShow = true;
       // testing only
-      this.dagRunId = 'asdasd'
+      //this.readyToShow = true;
+      //this.dagRunId = 'asdasd'
       //this.loadingData = true;
 
     });
@@ -160,15 +173,6 @@ export class AppComponent implements OnInit {
     const encodedCredentials = btoa(`${username}:${password}`);
     const headers = new HttpHeaders().set('Authorization', `Basic ${encodedCredentials}`);
     return headers;
-  }
-
-  startDag() {
-    const url = 'http://172.16.131.117:8080/api/v1/dags/spark_cd_to_lpg/dagRuns';
-    const headers = this.createAuthorizationHeader();
-    return this.http.post(url, {}, { headers }).subscribe(
-      res => console.log('Job started successfully', res),
-      err => console.error('Error starting job', err)
-    );
   }
 
   convertJsonToVisData(jsonData: any) {
@@ -209,9 +213,11 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    const dagId = 'spark_cd_to_lpg';
-    const airflowUrl = 'http://172.16.131.117:8080';
-    const apiUrl = `/api/v1/dags/${dagId}/dagRuns`;
+    this.requestError = '';
+    this.jobStarted = true;
+    this.changeMessage();
+    
+    const apiUrl = `/api/v1/dags/${this.dagId}/dagRuns`;
     const headers = this.createAuthorizationHeader();
 
     const conf = {
@@ -221,46 +227,39 @@ export class AppComponent implements OnInit {
     };
 
 
-
-  this.http
-    .post(`${airflowUrl}${apiUrl}`, conf, { headers })
-   
-    .subscribe({
+  this.http.post(`${this.airflowUrl}${apiUrl}`, conf, { headers }).subscribe({
       next: (res: any) => {
         this.dagRunId = res.dag_run_id;
         console.log('Job started successfully:', res.dag_run_id);
+        // trigger function on success
+        this.getDagRun(this.dagId, res.dag_run_id);
       },
       error: (err: any) => {
+        this.jobStarted = false;
+        this.requestError = err;
         console.error('Error starting job', err);
-    
-      },
+      }
     });
 
-    // this.http.post(`${airflowUrl}${apiUrl}`, conf, { headers }).subscribe({
-    //   next: (res: any) => {
-    //     this.dagRunId = res.dag_run_id
-    //     console.log('Job started successfully:', res.dag_run_id);
-    //   },
-    //   error: (err: any) => {
-    //     console.error('Error starting job', err);
-    //   }
-    // });
+  }
+
+  changeMessage() {
+    if (!this.jobStarted) {
+      clearTimeout(this.timeoutRef);
+      return;
+    }
+  
+    this.currentMessage = this.messages[Math.floor(Math.random() * this.messages.length)];
+    this.timeoutRef = setTimeout(() => {
+      this.changeMessage();
+    }, 2000); // Change the message every 3 seconds
   }
 
   getDagRun(dagId: string, dagRunId: string): void {
-    const airflowUrl = 'http://172.16.131.117:8080';
     const apiUrl = `/api/v1/dags/${dagId}/dagRuns/${dagRunId}`;
 
-    // Replace 'username' and 'password' with your actual credentials
-    const username = 'airflow';
-    const password = 'airflow';
-    const base64Credentials = btoa(`${username}:${password}`);
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${base64Credentials}`,
-    });
-
+    const headers = this.createAuthorizationHeader();
+    this.requestError = '';
     // Check every 5 seconds
     const checkInterval = 1000;
     const stopChecking$ = new Subject<void>();
@@ -270,7 +269,7 @@ export class AppComponent implements OnInit {
     const updateProgress = () => {
       const elapsedTime = Date.now() - startTime;
       const totalBlocks = this.blocks.length;
-  
+     
       this.blocks.forEach((block, index) => {
         const blockDuration = elapsedTime / totalBlocks;
         block.progress = Math.min(blockDuration / (index + 1), 100);
@@ -284,7 +283,7 @@ export class AppComponent implements OnInit {
       .pipe(
         takeUntil(stopChecking$), // Stop checking when the job is finished
         // Switch to the GET request for each interval tick
-        switchMap(() => this.http.get(`${airflowUrl}${apiUrl}`, { headers }))
+        switchMap(() => this.http.get(`${this.airflowUrl}${apiUrl}`, { headers }))
       ).pipe(
         finalize(() => {
           clearInterval(progressInterval);
@@ -299,12 +298,15 @@ export class AppComponent implements OnInit {
         next: (res: any) => {
           if (res.state === 'success') {
             // when dag is over
-            //this.loadJsonData();
+            this.readyToShow = true;
+            this.loadJsonData();
             stopChecking$.next(); // Stop checking when the job is finished
+            this.jobStarted = false;
           }
           else if (res.state === 'failed') { 
             stopChecking$.next(); // Stop checking when the job is finished
             this.loadingData = false;
+            this.jobStarted = false;
             this.handleRequestFailure();
             
           } else {
@@ -315,6 +317,8 @@ export class AppComponent implements OnInit {
           stopChecking$.next(); // Stop checking when the job is finished
           console.error('Error fetching DAG run details', err);
           this.loadingData = false;
+          this.jobStarted = false;
+          this.requestError = err;
           this.handleRequestFailure();
         }
       });
