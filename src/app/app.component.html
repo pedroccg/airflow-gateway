@@ -360,16 +360,64 @@
 
   </div>
 
-  <!-- Resources -->
-  <h2>Class Diagram Upload</h2>
-  <p>Please upload your Class Diagram:</p>
+  <div class="container">
 
-  <div>
-    <input type="file" (change)="onFileSelected($event)" />
-    <button mat-raised-button color="primary" (click)="startJob()" [disabled]="!fileContent">Trigger Airflow
-      Job</button>
+    <!-- <div class="block-container" *ngFor="let block of blocks; let i = index">
+      <mat-card class="block" [ngClass]="{'completed': block.completed}">
+        {{ block.title }}
+      </mat-card>
+      <mat-icon *ngIf="i < blocks.length - 1" class="arrow">arrow_forward</mat-icon>
+    </div> -->
+
+
+    <!-- Resources -->
+
+    <mat-card class="block">
+      <!-- <mat-card-header>
+      <mat-card-title>Class Diagram Upload</mat-card-title>
+    </mat-card-header> -->
+      <mat-card-content>
+        <!-- <p>Please upload your Class Diagram:</p> -->
+        <div class="file-input-wrapper">
+          <button mat-raised-button color="accent" (click)="fileInput.click()">Choose File</button>
+          <input hidden #fileInput type="file" (change)="onFileSelected($event)" />
+          <span class="file-input-label">{{ fileInputLabel }}</span>
+        </div>
+      </mat-card-content>
+      <!-- <mat-card-actions>
+    
+    </mat-card-actions> -->
+    </mat-card>
+    <mat-icon class="arrow">arrow_forward</mat-icon>
+
+
+    <div class="dashed-border">
+      <mat-card class="block">
+        <mat-card-content>
+          <button mat-raised-button color="primary" (click)="startJob()" [disabled]="!fileContent">Start Job</button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <mat-icon class="arrow">arrow_forward</mat-icon>
+
+
+    <div class="dashed-border">
+    <div *ngFor="let block of blocks; let i = index; let last = last" class="block-container">
+      <mat-card class="block" [ngStyle]="{
+          'border': '1px solid lightgrey',
+          'background-color': block.failed ? 'red' : block.completed ? 'green' : 'white'
+        }">
+        <mat-spinner
+          *ngIf="!block.completed && !block.failed && block.progress > 0 && (!blocks[i - 1] || blocks[i - 1].completed)"
+          diameter="30"></mat-spinner>
+        {{ block.title }}
+      </mat-card>
+      <mat-icon *ngIf="i < blocks.length - 1" class="arrow">arrow_forward</mat-icon>
+    </div>
   </div>
-  
+  </div>
+
+
   <div class="card-container">
     <div>
       <label for="dag_id">DAG ID:</label>
@@ -382,7 +430,7 @@
     <div>
       <button *ngIf="this.dagRunId " (click)="getDagRun(dagId, dagRunId)">Get DAG Run</button>
     </div>
-  
+
     <ng-container *ngIf="readyToShow && dagRunId; else loading">
       <div>
         <h1>

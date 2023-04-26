@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { interval, Subject, switchMap, takeUntil } from 'rxjs';
 import { VisNetworkService, Data, DataSet, Node, Options, Edge } from 'ngx-vis';
-import { ViewChild } from '@angular/core';
-//import * as d3 from 'd3'
+import { timer } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+
 
 
 
@@ -17,7 +18,15 @@ export class AppComponent implements OnInit {
 
   public visNetworkOptions!: Options
 
-
+  blocks = [
+    { title: 'Semantic Processing', completed: false, progress: 0, error: false, failed: false },
+    { title: 'Patterns Processing', completed: false, progress: 0, error: false , failed: false },
+    { title: 'Graph Processing', completed: false, progress: 0, error: false , failed: false },
+    { title: 'Assessment Processing', completed: false, progress: 0, error: false , failed: false }
+  ];
+  
+  
+  
 
   fileContent: string | ArrayBuffer | null = null;
 
@@ -25,7 +34,7 @@ export class AppComponent implements OnInit {
   dagRunId: string = '';
   results = '';
   subscription: any;
-
+  fileInputLabel: any
   jsonString = ''
 
   jsonData: any;
@@ -106,6 +115,10 @@ export class AppComponent implements OnInit {
           id: `visNetwork_${index + 1}`,
           data: { nodes: nodes, edges: edges },
           options: {
+            nodes: {
+              shape: 'circle',
+              size: 30, // Adjust this value to change the size of the nodes
+            },
             interaction:{
               zoomView: true,
             },
@@ -179,6 +192,17 @@ export class AppComponent implements OnInit {
     };
   }
 
+  handleRequestFailure() {
+    const failedBlockIndex = this.blocks.findIndex((block) => block.progress > 0 && !block.completed);
+    if (failedBlockIndex !== -1) {
+      this.blocks[failedBlockIndex].failed = true;
+      this.blocks[failedBlockIndex].error = true;
+      // Reset the progress and stop the spinner for the failed block
+      this.blocks[failedBlockIndex].progress = 0;
+    }
+  }
+  
+
   async startJob(): Promise<void> {
 
     if (!this.fileContent) {
@@ -196,15 +220,31 @@ export class AppComponent implements OnInit {
       }
     };
 
-    this.http.post(`${airflowUrl}${apiUrl}`, conf, { headers }).subscribe({
+
+
+  this.http
+    .post(`${airflowUrl}${apiUrl}`, conf, { headers })
+   
+    .subscribe({
       next: (res: any) => {
-        this.dagRunId = res.dag_run_id
+        this.dagRunId = res.dag_run_id;
         console.log('Job started successfully:', res.dag_run_id);
       },
       error: (err: any) => {
         console.error('Error starting job', err);
-      }
+    
+      },
     });
+
+    // this.http.post(`${airflowUrl}${apiUrl}`, conf, { headers }).subscribe({
+    //   next: (res: any) => {
+    //     this.dagRunId = res.dag_run_id
+    //     console.log('Job started successfully:', res.dag_run_id);
+    //   },
+    //   error: (err: any) => {
+    //     console.error('Error starting job', err);
+    //   }
+    // });
   }
 
   getDagRun(dagId: string, dagRunId: string): void {
@@ -225,14 +265,35 @@ export class AppComponent implements OnInit {
     const checkInterval = 1000;
     const stopChecking$ = new Subject<void>();
 
+    // block progress
+    const startTime = Date.now();
+    const updateProgress = () => {
+      const elapsedTime = Date.now() - startTime;
+      const totalBlocks = this.blocks.length;
+  
+      this.blocks.forEach((block, index) => {
+        const blockDuration = elapsedTime / totalBlocks;
+        block.progress = Math.min(blockDuration / (index + 1), 100);
+      });
+    };
+    const progressInterval = setInterval(updateProgress, 100);
+    //
+
     this.loadingData = true;
-
-
     interval(checkInterval)
       .pipe(
         takeUntil(stopChecking$), // Stop checking when the job is finished
         // Switch to the GET request for each interval tick
         switchMap(() => this.http.get(`${airflowUrl}${apiUrl}`, { headers }))
+      ).pipe(
+        finalize(() => {
+          clearInterval(progressInterval);
+          this.blocks.forEach((block) => {
+            if (block.progress === 100) {
+              block.error = true;
+            }
+          });
+        })
       )
       .subscribe({
         next: (res: any) => {
@@ -242,14 +303,19 @@ export class AppComponent implements OnInit {
             stopChecking$.next(); // Stop checking when the job is finished
           }
           else if (res.state === 'failed') { 
+            stopChecking$.next(); // Stop checking when the job is finished
             this.loadingData = false;
+            this.handleRequestFailure();
             
           } else {
             console.log('Job is not finished yet, current state:', res.state);
           }
         },
         error: (err: any) => {
+          stopChecking$.next(); // Stop checking when the job is finished
           console.error('Error fetching DAG run details', err);
+          this.loadingData = false;
+          this.handleRequestFailure();
         }
       });
   }
@@ -258,7 +324,7 @@ export class AppComponent implements OnInit {
   title = 'An Automated Patterns-based Model-to-Model Mapping and Transformation System for Labeled Property Graphs';
   selectedFile: File | null = null;
 
-  onFileSelected(event: Event): void {
+  onFileSelected(event: any): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) {
       return;
@@ -269,6 +335,13 @@ export class AppComponent implements OnInit {
       this.fileContent = reader.result;
     };
     reader.readAsText(file);
+
+    if (event.target.files && event.target.files.length > 0) {
+      this.fileInputLabel = event.target.files[0].name;
+    } else {
+      this.fileInputLabel = 'No file selected';
+    }
+
   }
 
 }
