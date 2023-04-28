@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
   jsonData: any;
   visData_1: any;
   visData_2: any;
-
+  helpers: boolean = false;
   readyToShow: boolean = false;
   visNetworks: any[] = [];
   loadingData: boolean = false;
@@ -110,11 +110,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // just for testing
-    this.loadJsonData();
+    //this.loadJsonData();
   }
 
   loadJsonData() {
-    this.http.get<any[]>('assets/jsons/tpch.json').subscribe((jsonDatas) => {
+    this.http.get<any[]>('assets/jsons/airplanes.json').subscribe((jsonDatas) => {
       jsonDatas.forEach((jsonData, index) => {
         const visData = this.convertJsonToVisData(jsonData);
         const nodes = visData.nodes;
@@ -260,21 +260,41 @@ export class AppComponent implements OnInit {
 
     const headers = this.createAuthorizationHeader();
     this.requestError = '';
-    // Check every 5 seconds
-    const checkInterval = 1000;
+    // Check every 2 seconds
+    const checkInterval = 2000;
     const stopChecking$ = new Subject<void>();
 
     // block progress
     const startTime = Date.now();
-    const updateProgress = () => {
-      const elapsedTime = Date.now() - startTime;
-      const totalBlocks = this.blocks.length;
-     
-      this.blocks.forEach((block, index) => {
-        const blockDuration = elapsedTime / totalBlocks;
-        block.progress = Math.min(blockDuration / (index + 1), 100);
-      });
-    };
+
+    // const updateProgress = () => {
+    //   const elapsedTime = Date.now() - startTime;
+    //   const totalBlocks = this.blocks.length;
+  
+    //   this.blocks.forEach((block, index) => {
+    //     const blockDuration = elapsedTime / totalBlocks;
+    //     block.progress = Math.min(blockDuration / (index + 1), 100);
+    //   });
+    // };
+
+   const updateProgress = () => {
+  const progressIncrement = 1; // Increment progress by 5% for each update
+
+  this.blocks.forEach((block, index) => {
+    if (block.completed || (index > 0 && !this.blocks[index - 1].completed)) {
+      return;
+    }
+
+    block.progress += progressIncrement;
+
+    if (block.progress >= 100) {
+      block.completed = true;
+      block.progress = 0;
+      block.failed = false;
+    }
+  });
+};
+    
     const progressInterval = setInterval(updateProgress, 100);
     //
 
@@ -284,19 +304,25 @@ export class AppComponent implements OnInit {
         takeUntil(stopChecking$), // Stop checking when the job is finished
         // Switch to the GET request for each interval tick
         switchMap(() => this.http.get(`${this.airflowUrl}${apiUrl}`, { headers }))
-      ).pipe(
+      )
+      .pipe(
         finalize(() => {
           clearInterval(progressInterval);
           this.blocks.forEach((block) => {
-            if (block.progress === 100) {
-              block.error = true;
-            }
+            console.log(block);
+            //if (block.progress === 100) {
+                   //block.error = false;
+                block.failed = false;
+                block.completed = true;
+                block.progress = 100;
+            //}
           });
         })
       )
       .subscribe({
         next: (res: any) => {
           if (res.state === 'success') {
+            console.log(this.blocks);
             // when dag is over
             this.readyToShow = true;
             this.loadJsonData();
@@ -304,6 +330,7 @@ export class AppComponent implements OnInit {
             this.jobStarted = false;
           }
           else if (res.state === 'failed') { 
+            console.log("failed");
             stopChecking$.next(); // Stop checking when the job is finished
             this.loadingData = false;
             this.jobStarted = false;
@@ -314,6 +341,7 @@ export class AppComponent implements OnInit {
           }
         },
         error: (err: any) => {
+          console.log("error");
           stopChecking$.next(); // Stop checking when the job is finished
           console.error('Error fetching DAG run details', err);
           this.loadingData = false;

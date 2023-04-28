@@ -1,4 +1,4 @@
-{
+[{
     "pattern": "GP3",
     "nodes": [{
         "id": "3",
@@ -35,7 +35,7 @@
         }
     }, {
         "id": "7",
-        "label": "BAGGAGE_BELT",
+        "label": "BAGGAGE BELT",
         "properties": {
             "belt_number": "None"
         }
@@ -45,21 +45,21 @@
         "properties": {}
     }, {
         "id": "12",
-        "label": "CREW_MEMBER_PILOT",
+        "label": "CREW MEMBER PILOT",
         "properties": {
             "license": "None",
             "flight_hours": "None"
         }
     }, {
         "id": "13",
-        "label": "CREW_MEMBER_COPILOT",
+        "label": "CREW MEMBER COPILOT",
         "properties": {
             "license": "None",
             "flight_hours": "None"
         }
     }, {
         "id": "14",
-        "label": "CREW_MEMBER_CABIN_CREW",
+        "label": "CREW MEMBER CABIN CREW",
         "properties": {
             "role": "None"
         }
@@ -90,120 +90,160 @@
         "source": "3",
         "target": "2",
         "value": "1..1",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "3_4",
         "source": "3",
         "target": "4",
         "value": "0..*",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "3_7",
         "source": "3",
         "target": "7",
         "value": "0..*",
-        "restriction": "Only one baggage per flight at the destination airport"
+        "restriction": "Only one baggage per flight at the destination airport",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "3_9",
         "source": "3",
         "target": "9",
         "value": "1..*",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "3_5",
         "source": "3",
         "target": "5",
         "value": "1..*",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "3_12",
         "source": "3",
         "target": "12",
         "value": "1..*",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "3_13",
         "source": "3",
         "target": "13",
         "value": "1..*",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "3_14",
         "source": "3",
         "target": "14",
         "value": "1..*",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "5_6",
         "source": "5",
         "target": "6",
         "value": "1..*",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "5_7",
         "source": "5",
         "target": "7",
         "value": ":Has",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "8_9",
         "source": "8",
         "target": "9",
         "value": "1..*",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "10_9",
         "source": "10",
         "target": "9",
         "value": "1..1",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "10_11",
         "source": "10",
         "target": "11",
         "value": "1..1",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "12_11",
         "source": "12",
         "target": "11",
         "value": "{Complete, Disjoint}",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "13_11",
         "source": "13",
         "target": "11",
         "value": "{Complete, Disjoint}",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "14_11",
         "source": "14",
         "target": "11",
         "value": "{Complete, Disjoint}",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "1_2",
         "source": "1",
         "target": "2",
         "value": "1..1",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "12_10",
         "source": "12",
         "target": "10",
         "value": "{Complete, Disjoint}",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "13_10",
         "source": "13",
         "target": "10",
         "value": "{Complete, Disjoint}",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }, {
         "id": "14_10",
         "source": "14",
         "target": "10",
         "value": "{Complete, Disjoint}",
-        "restriction": ""
+        "restriction": "",
+        "label": "",
+        "arrow": ""
     }]
-}
+}]

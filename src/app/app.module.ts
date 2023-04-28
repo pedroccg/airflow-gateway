@@ -16,6 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+
 
 
 @NgModule({
@@ -35,7 +37,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     HttpClientModule,
     VisModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatSlideToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent]
